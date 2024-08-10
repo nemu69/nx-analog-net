@@ -19,7 +19,11 @@ export default defineConfig(({ mode }) => {
         allow: ['.'],
       },
     },
-    plugins: [analog(), nxViteTsPaths(), splitVendorChunkPlugin()],
+    plugins: [
+      analog({ apiPrefix: 'services' }),
+      nxViteTsPaths(),
+      splitVendorChunkPlugin(),
+    ],
     test: {
       globals: true,
       environment: 'jsdom',

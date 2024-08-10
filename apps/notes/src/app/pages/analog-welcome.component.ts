@@ -122,8 +122,7 @@ export class AnalogWelcomeComponent {
   private http = inject(HttpClient);
   public triggerRefresh$ = new BehaviorSubject<void>(undefined);
   public notes$ = this.triggerRefresh$.pipe(
-    switchMap(() => this.http.get<Note[]>('/api/v1/notes')),
-    tap((notes) => console.log),
+    switchMap(() => this.http.get<Note[]>('/services/v1/notes')),
     shareReplay(1)
   );
   public newNote = '';
