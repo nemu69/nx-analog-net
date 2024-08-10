@@ -44,6 +44,9 @@ importers:
       front-matter:
         specifier: ^4.0.2
         version: 4.0.2
+      h3:
+        specifier: ^1.12.0
+        version: 1.12.0
       marked:
         specifier: ^5.0.2
         version: 5.1.2

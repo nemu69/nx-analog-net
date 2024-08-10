@@ -53,9 +53,10 @@ namespace FullStack.Api.Controllers
         if (note == null)
           return BadRequest();
 
-        var createdNote = await _context.Notes.AddAsync(note);
-        return CreatedAtAction(nameof(GetNote),
-                    new { id = createdNote.Entity.Id }, createdNote);
+        await _context.Notes.AddAsync(note);
+        await _context.SaveChangesAsync(); // Ensure the Id is generated
+
+        return CreatedAtAction(nameof(GetNote), new { id = note.Id }, note);
       }
       catch (Exception)
       {
@@ -63,6 +64,7 @@ namespace FullStack.Api.Controllers
             "Error creating new note record");
       }
     }
+
 
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteNote(int id)

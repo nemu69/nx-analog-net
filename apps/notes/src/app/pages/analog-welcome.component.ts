@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { BehaviorSubject, shareReplay, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, shareReplay, switchMap, take } from 'rxjs';
 import { Note } from '../note';
 import { HttpClient } from '@angular/common/http';
 
@@ -88,7 +88,7 @@ import { HttpClient } from '@angular/common/http';
         </form>
         @if (notes$ | async; as notes) {
         <div class="mt-4">
-          @for (note of notes; track noteTrackBy(i, note); let i = $index) {
+          @for (note of notes; track noteTrackBy(note); let i = $index) {
           <div class="note mb-4 p-4 font-normal border border-input rounded-md">
             <div class="flex items-center justify-between">
               <p class="text-sm text-zinc-400">{{ note.createdAt | date }}</p>
@@ -131,7 +131,7 @@ export class AnalogWelcomeComponent {
     this.triggerRefresh$.next();
   }
 
-  public noteTrackBy = (index: number, note: Note) => {
+  public noteTrackBy = (note: Note) => {
     return note.id;
   };
 
@@ -140,18 +140,22 @@ export class AnalogWelcomeComponent {
       form.form.markAllAsTouched();
       return;
     }
-    // this._trpc.note.create
-    //   .mutate({ note: this.newNote })
-    //   .pipe(take(1))
-    //   .subscribe(() => this.triggerRefresh$.next());
+    const note: Omit<Note, 'id'> = {
+      name: this.newNote,
+      createdAt: new Date().toISOString(),
+    };
+    this.http
+      .post<Note>('/services/v1/notes', note)
+      .pipe(take(1))
+      .subscribe(() => this.triggerRefresh$.next());
     this.newNote = '';
     form.form.reset();
   }
 
   public removeNote(id: string) {
-    // this._trpc.note.remove
-    //   .mutate({ id })
-    //   .pipe(take(1))
-    //   .subscribe(() => this.triggerRefresh$.next());
+    this.http
+      .delete(`/services/v1/notes/${id}`)
+      .pipe(take(1))
+      .subscribe(() => this.triggerRefresh$.next());
   }
 }
