@@ -9,24 +9,17 @@ export default defineConfig(({ mode }) => {
   return {
     root: __dirname,
     cacheDir: `../../node_modules/.vite`,
-    
     build: {
       outDir: '../../dist/apps/notes/client',
-      reportCompressedSize: true,    
+      reportCompressedSize: true,
       target: ['es2020'],
     },
     server: {
       fs: {
         allow: ['.'],
       },
-    },    
-    plugins: [
-      
-      analog(),
-      
-      nxViteTsPaths(),
-      splitVendorChunkPlugin(),
-    ],
+    },
+    plugins: [analog(), nxViteTsPaths(), splitVendorChunkPlugin()],
     test: {
       globals: true,
       environment: 'jsdom',
